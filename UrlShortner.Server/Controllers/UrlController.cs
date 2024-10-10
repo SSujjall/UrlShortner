@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UrlShortner.Data.Interface.IServices;
+using UrlShortner.Data.Models;
 
 namespace UrlShortner.Server.Controllers
 {
@@ -17,6 +18,11 @@ namespace UrlShortner.Server.Controllers
         [HttpPost("api/[controller]/Shorten")]
         public async Task<IActionResult> ShortenUrl([FromBody] string originalUrl)
         {
+            if (string.IsNullOrWhiteSpace(originalUrl))
+            {
+                return BadRequest("Invalid URL");
+            }
+
             var shortenedUrl = await _urlService.CreateShortenedUrlAsync(originalUrl);
             return Ok(shortenedUrl);
         }

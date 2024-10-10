@@ -17,6 +17,20 @@
     </form>
 </div>
 
+@if (ViewBag.ShortenedUrl != null)
+{
+    <div class="alert alert-success text-center mt-4">
+        <strong>Shortened URL:</strong> <a href="@ViewBag.ShortenedUrl" target="_blank">@ViewBag.ShortenedUrl</a>
+    </div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger text-center mt-4">
+        <strong>Error:</strong> Please enter a valid URL.
+    </div>
+}
+
 <style>
     .main-form {
         max-width: 80vh;
