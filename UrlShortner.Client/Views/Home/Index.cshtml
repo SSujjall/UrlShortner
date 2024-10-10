@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "URL Shortener";
+}
+
+<h1 class="text-center mb-5">Shorten your URL Here!</h1>
+
+<div class="d-flex justify-content-center">
+    <form asp-action="CreateShortUrl" method="post" class="form-control main-form">
+        <div class="d-flex flex-row justify-content-between px-1 main-div">
+            <input name="url" type="text" class="form-control border-0 custom-input" placeholder="Url Here" aria-label="URL" required />
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary d-flex align-items-center">
+                    <i class="bi bi-send me-2"></i>Shorten
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .main-form {
+        max-width: 80vh;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .custom-input {
+        padding-left: 0;
+    }
+
+        .custom-input:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+    .btn {
+        min-width: 5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .btn i {
+            font-size: 1.2rem;
+        }
+</style>

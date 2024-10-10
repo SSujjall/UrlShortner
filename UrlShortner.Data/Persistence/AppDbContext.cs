@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+
 using UrlShortner.Data.Models;
 
 namespace UrlShortner.Data.Persistence
@@ -13,7 +8,12 @@ namespace UrlShortner.Data.Persistence
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            
+
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Url> Urls { get; set; }

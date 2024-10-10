@@ -20,7 +20,7 @@ namespace UrlShortner.Data.Implementation.Services
             _urlRepository = urlRepository;
         }
 
-        public async Task<Url> CreateShortenedUrlAsync(string originalUrl)
+        public async Task<ResponseModel> CreateShortenedUrlAsync(string originalUrl)
         {
             return await _urlRepository.CreateShortenedUrlAsync(originalUrl);
         }

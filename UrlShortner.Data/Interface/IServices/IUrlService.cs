@@ -10,6 +10,6 @@ namespace UrlShortner.Data.Interface.IServices
     public interface IUrlService
     {
         Task<Url> GetShortenedUrlAsync(string shortUrl);
-        Task<Url> CreateShortenedUrlAsync(string originalUrl);
+        Task<ResponseModel> CreateShortenedUrlAsync(string originalUrl);
     }
 }

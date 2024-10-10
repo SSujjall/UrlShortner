@@ -19,7 +19,7 @@ namespace UrlShortner.Data.Implementation.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Url> CreateShortenedUrlAsync(string originalUrl)
+        public async Task<ResponseModel> CreateShortenedUrlAsync(string originalUrl)
         {
             var shortUrl = GenerateShortUrl();
             var shortenedUrl = new Url
@@ -31,12 +31,17 @@ namespace UrlShortner.Data.Implementation.Repositories
             _dbContext.Urls.Add(shortenedUrl);
             await _dbContext.SaveChangesAsync();
 
-            return shortenedUrl;
+            var result = new ResponseModel
+            {
+                ResponseUrl = shortUrl
+            };
+
+            return result;
         }
 
         public async Task<Url> GetShortenedUrlAsync(string shortUrl)
         {
-            return await _dbContext.Urls.FirstOrDefaultAsync(u => u.ShortUrl == shortUrl);
+           return await _dbContext.Urls.FirstOrDefaultAsync(u => u.ShortUrl == shortUrl);
         }
 
         private string GenerateShortUrl()

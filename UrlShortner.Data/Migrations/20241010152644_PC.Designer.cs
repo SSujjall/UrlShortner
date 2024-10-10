@@ -12,15 +12,15 @@ using UrlShortner.Data.Persistence;
 namespace UrlShortner.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241010124833_Initial")]
-    partial class Initial
+    [Migration("20241010152644_PC")]
+    partial class PC
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);

@@ -10,6 +10,6 @@ namespace UrlShortner.Data.Interface.IRepositories
     public interface IUrlRepository
     {
         Task<Url> GetShortenedUrlAsync(string shortUrl);
-        Task<Url> CreateShortenedUrlAsync(string originalUrl);
+        Task<ResponseModel> CreateShortenedUrlAsync(string originalUrl);
     }
 }
