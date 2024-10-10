@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using UrlShortner.Data.Implementation.Repositories;
+using UrlShortner.Data.Implementation.Services;
+using UrlShortner.Data.Interface.IRepositories;
 using UrlShortner.Data.Interface.IServices;
 using UrlShortner.Data.Persistence;
-using UrlShortner.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("UrlDB"));
 });
 
+builder.Services.AddScoped<IUrlRepository, UrlRepository>();
 builder.Services.AddScoped<IUrlService, UrlService>();
-builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

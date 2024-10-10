@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UrlShortner.Data.Models;
 
-namespace UrlShortner.Data.Interface.IServices
+namespace UrlShortner.Data.Interface.IRepositories
 {
-    public interface IUrlService
+    public interface IUrlRepository
     {
         Task<Url> GetShortenedUrlAsync(string shortUrl);
         Task<Url> CreateShortenedUrlAsync(string originalUrl);

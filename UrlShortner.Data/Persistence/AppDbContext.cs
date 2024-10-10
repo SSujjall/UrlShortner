@@ -9,7 +9,7 @@ using UrlShortner.Data.Models;
 
 namespace UrlShortner.Data.Persistence
 {
-    public class AppDbContext : IdentityDbContext<User>
+    public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
