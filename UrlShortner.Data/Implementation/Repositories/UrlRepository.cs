@@ -41,12 +41,16 @@ namespace UrlShortner.Data.Implementation.Repositories
 
         public async Task<Url> GetShortenedUrlAsync(string shortUrl)
         {
-           return await _dbContext.Urls.FirstOrDefaultAsync(u => u.ShortUrl == shortUrl);
+            return await _dbContext.Urls.FirstOrDefaultAsync(u => u.ShortUrl == shortUrl);
         }
 
         private string GenerateShortUrl()
         {
-            return Guid.NewGuid().ToString().Substring(0, 8); // Basic short URL generator
+            var newShortUrl = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
+            var bytes = System.Text.Encoding.UTF8.GetBytes(newShortUrl);
+            var result = System.Convert.ToBase64String(bytes).Substring(0, 8);
+
+            return result;
         }
     }
 }
