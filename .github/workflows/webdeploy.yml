@@ -3,7 +3,7 @@ name: Url Shortner CI/CD Pipeline
 on:
   push:
     branches:
-      - CI/CD-Test
+      - master
 
 jobs:
   build_and_deploy:
