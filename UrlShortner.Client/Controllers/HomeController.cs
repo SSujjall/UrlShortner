@@ -35,10 +35,10 @@ namespace UrlShortner.Client.Controllers
             {
                 var responseData = await response.Content.ReadAsStringAsync();
                 var shortenedUrl = JsonSerializer.Deserialize<UrlShortner.Client.Models.ResponseModel>(responseData);
-
+                var bUrl = $"{Request.Scheme}://{Request.Host}";
                 if (shortenedUrl != null)
                 {
-                    ViewBag.ShortenedUrl = $"{baseUrl}/{shortenedUrl?.responseUrl}";
+                    ViewBag.ShortenedUrl = $"{bUrl}/{shortenedUrl?.responseUrl}";
                 }
                 return View("Index");
             }
