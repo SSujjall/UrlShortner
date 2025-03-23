@@ -3,7 +3,7 @@ name: Url Shortner CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - CI/CD-Test
 
 jobs:
   build_and_deploy:
@@ -56,8 +56,8 @@ jobs:
           target-path: /
 
       - name: Apply database migrations
-        run: dotnet ef database update --configuration Release --no-build --project UrlShortner.Server/UrlShortner.Server.csproj
+        run: dotnet ef database update --configuration Release --no-build --project ./UrlShortner.Server/UrlShortner.Server.csproj
         env:
           ASPNETCORE_ENVIRONMENT: Production
-          ConnectionStrings__DefaultConnection: ${{ secrets.MONSTERASP_URLDB_CONNECTION_STRING }}
+          ConnectionStrings__UrlDB: ${{ secrets.MONSTERASP_URLDB_CONNECTION_STRING }}
 
