@@ -23,4 +23,8 @@
     <ProjectReference Include="..\UrlShortner.Data\UrlShortner.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>
