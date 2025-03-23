@@ -56,7 +56,7 @@ jobs:
           target-path: /
 
       - name: Apply database migrations
-        run: dotnet ef database update --configuration Release --no-build --project UrlShortner.Server/UrlShortner.Server.csproj
+        run: dotnet ef database update --configuration Release --no-build --project ./UrlShortner.Server/UrlShortner.Server.csproj
         env:
           ASPNETCORE_ENVIRONMENT: Production
           ConnectionStrings__DefaultConnection: ${{ secrets.MONSTERASP_URLDB_CONNECTION_STRING }}
