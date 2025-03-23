@@ -35,7 +35,6 @@ namespace UrlShortner.Client.Controllers
             {
                 var responseData = await response.Content.ReadAsStringAsync();
                 var shortenedUrl = JsonSerializer.Deserialize<UrlShortner.Client.Models.ResponseModel>(responseData);
-
                 if (shortenedUrl != null)
                 {
                     ViewBag.ShortenedUrl = $"{baseUrl}/{shortenedUrl?.responseUrl}";
