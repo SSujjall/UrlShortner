@@ -1,0 +1,63 @@
+name: Url Shortner CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install EF Core Tools 8.0.10
+        run: dotnet tool install --global dotnet-ef --version 8.0.10
+
+      - name: Verify dotnet-ef version
+        run: dotnet ef --version
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build Web API Project
+        run: dotnet build UrlShortner/UrlShortner.Server/UrlShortner.Server.csproj --configuration Release
+
+      - name: Publish Web API Project
+        run: dotnet publish UrlShortner/UrlShortner.Server/UrlShortner.Server.csproj --configuration Release --output ./publish
+
+      - name: Handle appsettings.json
+        run: |
+          # If SKIP_APPSETTINGS is true, remove appsettings.json from deployment
+          if ("${{ vars.SKIP_APPSETTINGS }}" -eq "true") {
+              Write-Host "SKIP_APPSETTINGS is true. Removing appsettings.json..."
+              Remove-Item -Path ./publish/appsettings.json -Force -ErrorAction SilentlyContinue
+              Write-Host "appsettings.json removed from deployment package."
+          } else {
+              Write-Host "Including appsettings.json in deployment."
+          }
+        shell: pwsh
+
+      - name: Deploy to MonsterAsp with webdeploy
+        uses: rasmusbuchholdt/simply-web-deploy@2.1.0
+        with:
+          website-name: ${{ secrets.WEBSITE_NAME }}
+          server-computer-name: ${{ secrets.SERVER_COMPUTER_NAME }}
+          server-username: ${{ secrets.SERVER_USERNAME }}
+          server-password: ${{ secrets.SERVER_PASSWORD }}
+          source-path: publish/
+          target-path: /
+
+      - name: Apply database migrations
+        run: dotnet ef database update --configuration Release --no-build --project UrlShortner/UrlShortner.Server/UrlShortner.Server.csproj
+        env:
+          ASPNETCORE_ENVIRONMENT: Production
+          ConnectionStrings__DefaultConnection: ${{ secrets.MONSTERASP_URLDB_CONNECTION_STRING }}
+
