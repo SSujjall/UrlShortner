@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using UrlShortner.Data.Interface.IServices;
-using UrlShortner.Data.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using UrlShortner.Data.Models.Requests;
+using UrlShortner.Data.Services.Url;
 
 namespace UrlShortner.Server.Controllers
 {
@@ -16,14 +15,21 @@ namespace UrlShortner.Server.Controllers
         }
 
         [HttpPost("api/[controller]/Shorten")]
-        public async Task<IActionResult> ShortenUrl([FromBody] string originalUrl)
+        public async Task<IActionResult> ShortenUrl([FromBody] ShortenUrlRequest req)
         {
-            if (string.IsNullOrWhiteSpace(originalUrl))
+            if (!HttpContext.Items.ContainsKey("UserId"))
+            {
+                return Unauthorized("User ID not found.");
+            }
+
+            var userId = (string)HttpContext.Items["UserId"];
+
+            if (string.IsNullOrWhiteSpace(req.OriginalUrl))
             {
                 return BadRequest("Invalid URL");
             }
 
-            var shortenedUrl = await _urlService.CreateShortenedUrlAsync(originalUrl);
+            var shortenedUrl = await _urlService.CreateShortenedUrlAsync(userId, req.OriginalUrl);
             return Ok(shortenedUrl);
         }
 
@@ -37,6 +43,19 @@ namespace UrlShortner.Server.Controllers
             }
 
             return Redirect(shortenedUrl.OriginalUrl);
+        }
+
+        [HttpGet("history")]
+        public async Task<IActionResult> GetUrlHistory()
+        {
+            if (!HttpContext.Items.ContainsKey("UserId"))
+            {
+                return Unauthorized("User ID not found.");
+            }
+            var userId = (string)HttpContext.Items["UserId"];
+
+            var urls = await _urlService.GetUserUrls(userId);
+            return Ok(urls);
         }
     }
 }

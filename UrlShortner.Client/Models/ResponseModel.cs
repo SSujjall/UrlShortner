@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace UrlShortner.Client.Models
+﻿namespace UrlShortner.Client.Models
 {
     public class ResponseModel
     {

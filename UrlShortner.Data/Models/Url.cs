@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace UrlShortner.Data.Models
 {
@@ -18,6 +14,11 @@ namespace UrlShortner.Data.Models
         [Required]
         public string ShortUrl { get; set; }
 
+        [ForeignKey("User")]
+        public string UserID { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        //Navigation property
+        public ApiUser User { get; set; }
     }
 }
