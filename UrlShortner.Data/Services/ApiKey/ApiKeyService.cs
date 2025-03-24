@@ -24,9 +24,12 @@ namespace UrlShortner.Data.Services.ApiKey
                 await _userRepo.AddUserAsync(user);
             }
 
-            if(user.ApiKey.IsActive)
+            if(user.ApiKey != null)
             {
-                return "Cannot create new api key unless old one is revoked.";
+                if (user.ApiKey.IsActive)
+                {
+                    return "Cannot create new api key unless old one is revoked.";
+                }
             }
 
             var newKey = await _apiKeyRepo.GenerateApiKeyAsync(user.UserId);
