@@ -63,8 +63,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/apikey/generate"),
-    appBuilder => appBuilder.UseMiddleware<ApiKeyAuthMiddleware>());
+app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/apikey/generate-new-api-key") 
+            && !context.Request.Path.StartsWithSegments("/api/apikey/get-api-key")
+            && !context.Request.Path.StartsWithSegments("/api/apikey/revoke"),
+    appBuilder => appBuilder.UseMiddleware<ApiKeyAuthMiddleware>()
+);
 
 app.UseAuthorization();
 

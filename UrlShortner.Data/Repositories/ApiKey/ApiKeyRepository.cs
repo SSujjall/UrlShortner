@@ -26,7 +26,7 @@ namespace UrlShortner.Data.Repositories.ApiKey
             return newKey;
         }
 
-        public async Task<Models.ApiKey> GetApiKeyAsync(string apiKey)
+        public async Task<Models.ApiKey> CheckApiKey(string apiKey)
         {
             return await _dbContext.ApiKeys.Include(k => k.User)
             .FirstOrDefaultAsync(k => k.ApiKeyHash == apiKey.Encrypt() && k.IsActive);
@@ -37,6 +37,12 @@ namespace UrlShortner.Data.Repositories.ApiKey
             var key = await _dbContext.ApiKeys.FirstOrDefaultAsync(k => k.UserId == userId);
             if (key != null) key.IsActive = false;
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<string> GetUserApiKey(string email)
+        {
+            var res = await _dbContext.ApiKeys.FirstOrDefaultAsync(k => k.User.Email == email && k.IsActive);
+            return res.ApiKeyHash.Decrypt();
         }
     }
 }

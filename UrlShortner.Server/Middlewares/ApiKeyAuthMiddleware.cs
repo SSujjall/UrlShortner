@@ -23,7 +23,7 @@ namespace UrlShortner.Server.Middlewares
                 return;
             }
 
-            var keyRecord = await apiKeyRepo.GetApiKeyAsync(extractedApiKey);
+            var keyRecord = await apiKeyRepo.CheckApiKey(extractedApiKey);
 
             if (keyRecord == null)
             {

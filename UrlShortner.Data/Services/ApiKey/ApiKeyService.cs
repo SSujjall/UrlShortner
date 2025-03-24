@@ -24,20 +24,31 @@ namespace UrlShortner.Data.Services.ApiKey
                 await _userRepo.AddUserAsync(user);
             }
 
-            if(user.ApiKey != null)
+            if(user.ApiKey.IsActive)
             {
                 return "Cannot create new api key unless old one is revoked.";
             }
-
 
             var newKey = await _apiKeyRepo.GenerateApiKeyAsync(user.UserId);
             return newKey.ApiKeyHash.Decrypt();
         }
 
-        public async Task RevokeApiKeyAsync(string email)
+        public async Task<string> GetUserApiKey(string email)
+        {
+            var apiKey = await _apiKeyRepo.GetUserApiKey(email);
+            return apiKey;
+        }
+
+        public async Task<string> RevokeApiKeyAsync(string email)
         {
             var user = await _userRepo.GetUserByEmailAsync(email);
-            if (user != null) await _apiKeyRepo.RevokeApiKeyAsync(user.UserId);
+            if (user.ApiKey.IsActive)
+            {
+                await _apiKeyRepo.RevokeApiKeyAsync(user.UserId);
+                return "Api Key Revoked";
+            }
+
+            return "No active api key found.";
         }
     }
 }
