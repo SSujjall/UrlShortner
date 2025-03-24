@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UrlShortner.Data.Models.Config;
 using UrlShortner.Data.Persistence;
 using UrlShortner.Data.Repositories.ApiKey;
 using UrlShortner.Data.Repositories.Url;
@@ -26,6 +27,8 @@ builder.Services.AddScoped<IUrlService, UrlService>();
 builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
 builder.Services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
 builder.Services.AddSwaggerGen(options =>
 {
