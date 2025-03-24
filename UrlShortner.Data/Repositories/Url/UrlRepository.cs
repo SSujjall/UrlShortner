@@ -1,14 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UrlShortner.Data.Interface.IRepositories;
+﻿using System.Text;
+using Microsoft.EntityFrameworkCore;
 using UrlShortner.Data.Models;
 using UrlShortner.Data.Persistence;
 
-namespace UrlShortner.Data.Implementation.Repositories
+namespace UrlShortner.Data.Repositories.Url
 {
     public class UrlRepository : IUrlRepository
     {
@@ -19,13 +14,14 @@ namespace UrlShortner.Data.Implementation.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<ResponseModel> CreateShortenedUrlAsync(string originalUrl)
+        public async Task<ResponseModel> CreateShortenedUrlAsync(string userId,string originalUrl)
         {
             var shortUrl = GenerateShortUrl();
-            var shortenedUrl = new Url
+            var shortenedUrl = new Models.Url
             {
                 OriginalUrl = originalUrl,
-                ShortUrl = shortUrl
+                ShortUrl = shortUrl,
+                UserID = userId
             };
 
             _dbContext.Urls.Add(shortenedUrl);
@@ -39,16 +35,21 @@ namespace UrlShortner.Data.Implementation.Repositories
             return result;
         }
 
-        public async Task<Url> GetShortenedUrlAsync(string shortUrl)
+        public async Task<Models.Url> GetShortenedUrlAsync(string shortUrl)
         {
             return await _dbContext.Urls.FirstOrDefaultAsync(u => u.ShortUrl == shortUrl);
+        }
+
+        public async Task<IEnumerable<string>> GetUserUrls(string userId)
+        {
+            return await _dbContext.Urls.Where(u => u.UserID == userId).Select(u => u.ShortUrl).ToListAsync();
         }
 
         private string GenerateShortUrl()
         {
             var newShortUrl = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
-            var bytes = System.Text.Encoding.UTF8.GetBytes(newShortUrl);
-            var result = System.Convert.ToBase64String(bytes).Substring(0, 8);
+            var bytes = Encoding.UTF8.GetBytes(newShortUrl);
+            var result = Convert.ToBase64String(bytes).Substring(0, 8);
 
             return result;
         }

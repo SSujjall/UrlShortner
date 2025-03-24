@@ -1,9 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using UrlShortner.Data.Implementation.Repositories;
-using UrlShortner.Data.Implementation.Services;
-using UrlShortner.Data.Interface.IRepositories;
-using UrlShortner.Data.Interface.IServices;
+using UrlShortner.Data.Models.Config;
 using UrlShortner.Data.Persistence;
+using UrlShortner.Data.Repositories.ApiKey;
+using UrlShortner.Data.Repositories.Url;
+using UrlShortner.Data.Repositories.User;
+using UrlShortner.Data.Services.ApiKey;
+using UrlShortner.Data.Services.Url;
 using UrlShortner.Server.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IUrlRepository, UrlRepository>();
 builder.Services.AddScoped<IUrlService, UrlService>();
+builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
+builder.Services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -59,7 +66,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseMiddleware<ApiKeyAuthMiddleware>();
+app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/apikey/generate-new-api-key") 
+            && !context.Request.Path.StartsWithSegments("/api/apikey/get-api-key")
+            && !context.Request.Path.StartsWithSegments("/api/apikey/revoke"),
+    appBuilder => appBuilder.UseMiddleware<ApiKeyAuthMiddleware>()
+);
 
 app.UseAuthorization();
 

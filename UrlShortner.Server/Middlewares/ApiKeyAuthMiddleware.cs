@@ -1,19 +1,20 @@
-﻿using UrlShortner.Data.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using UrlShortner.Data.Models;
+using UrlShortner.Data.Persistence;
+using UrlShortner.Data.Repositories.ApiKey;
 
 namespace UrlShortner.Server.Middlewares
 {
     public class ApiKeyAuthMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IConfiguration _configuration;
 
-        public ApiKeyAuthMiddleware(RequestDelegate next, IConfiguration configuration)
+        public ApiKeyAuthMiddleware(RequestDelegate next)
         {
             _next = next;
-            _configuration = configuration;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IApiKeyRepository apiKeyRepo)
         {
             if (!context.Request.Headers.TryGetValue(AuthConstants.ApiKeyHeaderName, out var extractedApiKey))
             {
@@ -22,14 +23,15 @@ namespace UrlShortner.Server.Middlewares
                 return;
             }
 
-            var apiKey = _configuration.GetValue<string>(AuthConstants.ApiKeySectionName);
-            if (!apiKey.Equals(extractedApiKey))
+            var keyRecord = await apiKeyRepo.CheckApiKey(extractedApiKey);
+
+            if (keyRecord == null)
             {
-                context.Response.StatusCode = 401;
-                await context.Response.WriteAsync("Invalid API Key.");
+                context.Response.StatusCode = 403;
+                await context.Response.WriteAsync("Invalid or revoked API Key.");
                 return;
             }
-
+            context.Items["UserId"] = keyRecord.UserId;
             await _next(context);
         }
     }
