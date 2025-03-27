@@ -17,4 +17,12 @@ namespace UrlShortner.Data.Models.Requests
         [EmailAddress]
         public string Email { get; set; }
     }
+
+    public class KeyChangeOtpRequest
+    {
+        [Gmail]
+        [EmailAddress]
+        public string Email { get; set; }
+        public string Otp { get; set; }
+    }
 }

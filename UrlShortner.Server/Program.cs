@@ -2,11 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using UrlShortner.Data.Models.Config;
 using UrlShortner.Data.Persistence;
 using UrlShortner.Data.Repositories.ApiKey;
+using UrlShortner.Data.Repositories.ForgotKey;
 using UrlShortner.Data.Repositories.Url;
 using UrlShortner.Data.Repositories.User;
 using UrlShortner.Data.Services.ApiKey;
 using UrlShortner.Data.Services.Email;
 using UrlShortner.Data.Services.Email.Config;
+using UrlShortner.Data.Services.ForgotKey;
 using UrlShortner.Data.Services.Url;
 using UrlShortner.Server.Middlewares;
 
@@ -30,6 +32,8 @@ builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
 builder.Services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddScoped<IForgotKeyRepository, ForgotKeyRepository>();
+builder.Services.AddScoped<IForgotKeyService, ForgotKeyService>();
 
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
@@ -77,7 +81,9 @@ app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/apikey/gen
             && !context.Request.Path.StartsWithSegments("/api/apikey/get-api-key")
             && !context.Request.Path.StartsWithSegments("/api/apikey/revoke")
             && !context.Request.Path.StartsWithSegments("/api/apikey/user-generate-new-key")
-            && !context.Request.Path.StartsWithSegments("/api/apikey/send-mail-test"),
+            && !context.Request.Path.StartsWithSegments("/api/test/send-mail-test")
+            && !context.Request.Path.StartsWithSegments("/api/apikey/forgot-key")
+            && !context.Request.Path.StartsWithSegments("/api/apikey/change-key"),
     appBuilder => appBuilder.UseMiddleware<ApiKeyAuthMiddleware>()
 );
 

@@ -27,5 +27,17 @@ namespace UrlShortner.Data.Repositories.User
         {
             return await _dbContext.ApiUsers.Include(u => u.ApiKey).FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<bool> UpdateUserAsync(ApiUser user)
+        {
+            var result = _dbContext.Update(user);
+
+            if (result != null)
+            {
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }

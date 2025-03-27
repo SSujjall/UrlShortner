@@ -10,6 +10,7 @@ namespace UrlShortner.Data.Models
 
         // Navigation property
         public ApiKey ApiKey { get; set; }
+        public List<UserOtp> Otps { get; set; }
 
     }
 }
