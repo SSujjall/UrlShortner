@@ -10,4 +10,11 @@ namespace UrlShortner.Data.Models.Requests
         public string Email { get; set; }
         public string? SecretKey { get; set; }
     }
+
+    public class UserApiKeyRequest
+    {
+        [Gmail]
+        [EmailAddress]
+        public string Email { get; set; }
+    }
 }

@@ -4,6 +4,8 @@ using Microsoft.Extensions.Options;
 using UrlShortner.Data.Models.Config;
 using UrlShortner.Data.Models.Requests;
 using UrlShortner.Data.Services.ApiKey;
+using UrlShortner.Data.Services.Email;
+using UrlShortner.Data.Services.Email.EmailModel;
 
 namespace UrlShortner.Server.Controllers
 {
@@ -13,13 +15,17 @@ namespace UrlShortner.Server.Controllers
     {
         private readonly IApiKeyService _service;
         private readonly string _secretKey;
-        public ApiKeyController(IApiKeyService service, IOptions<ApiSettings> apiSettings)
+        private readonly IEmailService _emailService;
+
+        public ApiKeyController(IApiKeyService service, IOptions<ApiSettings> apiSettings,
+            IEmailService emailService)
         {
             _service = service;
             _secretKey = apiSettings.Value.SecretKey;
+            _emailService = emailService;
         }
 
-        [HttpPost("generate-new-api-key")]
+        [HttpPost("generate-new-api-key-admin")]
         public async Task<IActionResult> GenerateApiKey([FromBody] ApiKeyRequest request)
         {
             if (string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.SecretKey))
@@ -37,6 +43,38 @@ namespace UrlShortner.Server.Controllers
             {
                 ApiKey = response
             });
+        }
+
+        [HttpPost("user-generate-new-key")]
+        public async Task<IActionResult> GenerateNewKey([FromBody] UserApiKeyRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email))
+            {
+                return BadRequest("Email is required.");
+            }
+
+            var response = await _service.GenerateApiKeyAsync(request.Email);
+            if (string.IsNullOrEmpty(response))
+            {
+                return BadRequest("Failed to generate API key.");
+            }
+
+            var msg = new EmailMessage
+            {
+                To = request.Email,
+                Subject = "UrlShortner Login Key",
+                Content = $"Your login key is: {response}"
+            };
+
+            try
+            {
+                await _emailService.SendMail(msg);
+                return Ok("Api key sent to email.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Failed to send email. Error: {ex.Message}");
+            }
         }
 
         [HttpPost("get-api-key")]

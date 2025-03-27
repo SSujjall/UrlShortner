@@ -5,6 +5,8 @@ using UrlShortner.Data.Repositories.ApiKey;
 using UrlShortner.Data.Repositories.Url;
 using UrlShortner.Data.Repositories.User;
 using UrlShortner.Data.Services.ApiKey;
+using UrlShortner.Data.Services.Email;
+using UrlShortner.Data.Services.Email.Config;
 using UrlShortner.Data.Services.Url;
 using UrlShortner.Server.Middlewares;
 
@@ -27,6 +29,7 @@ builder.Services.AddScoped<IUrlService, UrlService>();
 builder.Services.AddScoped<IApiKeyService, ApiKeyService>();
 builder.Services.AddScoped<IApiKeyRepository, ApiKeyRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 builder.Services.Configure<ApiSettings>(builder.Configuration.GetSection("ApiSettings"));
 
@@ -55,6 +58,10 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+#region SMTP Mail Config (Mailtrap.io)
+var emailConfig = builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("MailConfig"));
+#endregion
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -68,7 +75,9 @@ app.UseHttpsRedirection();
 
 app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/apikey/generate-new-api-key") 
             && !context.Request.Path.StartsWithSegments("/api/apikey/get-api-key")
-            && !context.Request.Path.StartsWithSegments("/api/apikey/revoke"),
+            && !context.Request.Path.StartsWithSegments("/api/apikey/revoke")
+            && !context.Request.Path.StartsWithSegments("/api/apikey/user-generate-new-key")
+            && !context.Request.Path.StartsWithSegments("/api/apikey/send-mail-test"),
     appBuilder => appBuilder.UseMiddleware<ApiKeyAuthMiddleware>()
 );
 
