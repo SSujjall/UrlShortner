@@ -2,7 +2,7 @@
 
 namespace UrlShortner.Data.Extensions
 {
-    public static class EncryptExtension
+    public static class StringExtension
     {
         public static string Encrypt(this string data)
         {

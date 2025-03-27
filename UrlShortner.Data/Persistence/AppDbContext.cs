@@ -19,5 +19,6 @@ namespace UrlShortner.Data.Persistence
         public DbSet<Url> Urls { get; set; }
         public DbSet<ApiUser> ApiUsers { get; set; }
         public DbSet<ApiKey> ApiKeys { get; set; }
+        public DbSet<UserOtp> UserOtps { get; set; }
     }
 }

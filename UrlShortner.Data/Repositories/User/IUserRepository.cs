@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using UrlShortner.Data.Models;
 
 namespace UrlShortner.Data.Repositories.User
 {
     public interface IUserRepository
     {
-        Task<Models.ApiUser> GetUserByEmailAsync(string email);
-        Task AddUserAsync(Models.ApiUser user);
+        Task<ApiUser> GetUserByEmailAsync(string email);
+        Task AddUserAsync(ApiUser user);
+        Task<bool> UpdateUserAsync(ApiUser user);
     }
 }

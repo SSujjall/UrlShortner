@@ -15,7 +15,7 @@ namespace UrlShortner.Data.Services.ApiKey
             _userRepo = userRepo;
         }
 
-        public async Task<string> GenerateApiKeyAsync(string email)
+        public async Task<string> GenerateApiKeyAsync(string email, bool isFp)
         {
             var user = await _userRepo.GetUserByEmailAsync(email);
             if (user == null)
@@ -24,7 +24,7 @@ namespace UrlShortner.Data.Services.ApiKey
                 await _userRepo.AddUserAsync(user);
             }
 
-            if(user.ApiKey != null)
+            if(user.ApiKey != null && isFp == false)
             {
                 if (user.ApiKey.IsActive)
                 {
