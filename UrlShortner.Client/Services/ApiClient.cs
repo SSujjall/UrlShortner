@@ -16,7 +16,7 @@ namespace UrlShortner.Client.Services
         {
             _http = http;
             _ctx = ctx;
-            BaseUrl = config["ApiBaseUrl"] ?? "http://url.runasp.net";
+            BaseUrl = config["ApiBaseUrl"]!;
         }
 
         public string? CurrentKey => _ctx.HttpContext?.Request.Cookies[KeyCookie];
