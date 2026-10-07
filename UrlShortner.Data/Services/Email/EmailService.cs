@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using MailKit.Security;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using UrlShortner.Data.Services.Email.Config;
 using UrlShortner.Data.Services.Email.EmailModel;
@@ -34,10 +35,12 @@ namespace UrlShortner.Data.Services.Email
         private async Task Send(MimeMessage msg)
         {
             var client = new MailKit.Net.Smtp.SmtpClient();
+            // The OS revocation check (OCSP/CRL) is often unreachable (e.g. on macOS), which fails the handshake.
+            client.CheckCertificateRevocation = false;
 
             try
             {
-                await client.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port, true);
+                await client.ConnectAsync(_emailConfig.SmtpServer, _emailConfig.Port, SecureSocketOptions.SslOnConnect);
                 client.AuthenticationMechanisms.Remove("XOAUTH2");
                 await client.AuthenticateAsync(_emailConfig.Username, _emailConfig.Password);
                 await client.SendAsync(msg);
