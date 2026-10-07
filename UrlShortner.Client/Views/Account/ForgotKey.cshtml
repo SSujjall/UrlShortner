@@ -1,0 +1,10 @@
+@{ ViewData["Title"] = "Forgot key"; }
+<h1 class="text-center mb-4">Forgot your key?</h1>
+<div class="mx-auto" style="max-width:30rem">
+    <partial name="_Alerts" />
+    <form asp-action="ForgotKey" method="post">
+        <input name="email" type="email" class="form-control mb-3" placeholder="Gmail address" required />
+        <button type="submit" class="btn btn-primary w-100">Send OTP</button>
+    </form>
+    <a asp-action="Login" class="d-block mt-3">Back to login</a>
+</div>

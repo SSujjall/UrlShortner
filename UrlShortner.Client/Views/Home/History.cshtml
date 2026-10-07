@@ -1,0 +1,23 @@
+@model List<string>
+@{ ViewData["Title"] = "History"; }
+<h1 class="text-center mb-4">Your URL history</h1>
+<div class="mx-auto" style="max-width:40rem">
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger text-center">@ViewBag.Error</div>
+    }
+    @if (Model.Count == 0)
+    {
+        <p class="text-center text-muted">No shortened URLs yet.</p>
+    }
+    else
+    {
+        <ul class="list-group">
+            @foreach (var code in Model)
+            {
+                var full = $"{ViewBag.BaseUrl}/{code}";
+                <li class="list-group-item"><a href="@full" target="_blank">@full</a></li>
+            }
+        </ul>
+    }
+</div>

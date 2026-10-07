@@ -1,0 +1,13 @@
+@{ ViewData["Title"] = "Login"; }
+<h1 class="text-center mb-4">Login with your API key</h1>
+<div class="mx-auto" style="max-width:30rem">
+    <partial name="_Alerts" />
+    <form asp-action="Login" method="post">
+        <input name="apiKey" type="password" class="form-control mb-3" placeholder="API key" autocomplete="current-password" required />
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+    <div class="d-flex justify-content-between mt-3">
+        <a asp-action="GetKey">Get an API key</a>
+        <a asp-action="ForgotKey">Forgot key?</a>
+    </div>
+</div>

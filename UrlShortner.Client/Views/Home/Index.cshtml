@@ -1,9 +1,10 @@
-﻿@{
+@{
     ViewData["Title"] = "URL Shortener";
 }
 
 <h1 class="text-center mb-5">Shorten your URL Here!</h1>
 
+<partial name="_Alerts" />
 <div class="d-flex justify-content-center">
     <form asp-action="CreateShortUrl" method="post" class="form-control main-form">
         <div class="d-flex flex-row justify-content-between px-1 main-div">

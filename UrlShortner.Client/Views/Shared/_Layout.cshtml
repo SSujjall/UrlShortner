@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -24,7 +24,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        @if (Context.Request.Cookies["api_key"] != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Home" asp-action="History">History</a>
+                            </li>
+                        }
                     </ul>
+                    @if (Context.Request.Cookies["api_key"] != null)
+                    {
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-flex">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+                        </form>
+                    }
                 </div>
             </div>
         </nav>

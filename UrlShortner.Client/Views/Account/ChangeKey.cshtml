@@ -1,0 +1,11 @@
+@{ ViewData["Title"] = "Reset key"; }
+<h1 class="text-center mb-4">Enter OTP to reset your key</h1>
+<div class="mx-auto" style="max-width:30rem">
+    <partial name="_Alerts" />
+    <form asp-action="ChangeKey" method="post">
+        <input name="email" type="email" class="form-control mb-3" placeholder="Gmail address" value="@ViewBag.Email" required />
+        <input name="otp" type="text" class="form-control mb-3" placeholder="OTP" autocomplete="one-time-code" required />
+        <button type="submit" class="btn btn-primary w-100">Reset key</button>
+    </form>
+    <a asp-action="Login" class="d-block mt-3">Back to login</a>
+</div>

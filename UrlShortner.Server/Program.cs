@@ -77,7 +77,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseWhen(context => !context.Request.Path.StartsWithSegments("/api/apikey/generate-new-api-key") 
+// Public short-link redirect: GET /{shortUrl} (single segment, anything except /history)
+static bool IsShortLinkRedirect(HttpContext c)
+{
+    var path = c.Request.Path.Value?.Trim('/') ?? "";
+    return HttpMethods.IsGet(c.Request.Method)
+        && path.Length > 0
+        && !path.Contains('/')
+        && !path.Equals("history", StringComparison.OrdinalIgnoreCase);
+}
+
+app.UseWhen(context => !IsShortLinkRedirect(context)
+            && !context.Request.Path.StartsWithSegments("/api/apikey/generate-new-api-key") 
             && !context.Request.Path.StartsWithSegments("/api/apikey/get-api-key")
             && !context.Request.Path.StartsWithSegments("/api/apikey/revoke")
             && !context.Request.Path.StartsWithSegments("/api/apikey/user-generate-new-key")

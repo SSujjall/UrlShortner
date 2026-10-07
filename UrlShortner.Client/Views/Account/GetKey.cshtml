@@ -1,0 +1,10 @@
+@{ ViewData["Title"] = "Get API key"; }
+<h1 class="text-center mb-4">Get an API key</h1>
+<div class="mx-auto" style="max-width:30rem">
+    <partial name="_Alerts" />
+    <form asp-action="GetKey" method="post">
+        <input name="email" type="email" class="form-control mb-3" placeholder="Gmail address" required />
+        <button type="submit" class="btn btn-primary w-100">Send key to my email</button>
+    </form>
+    <a asp-action="Login" class="d-block mt-3">Back to login</a>
+</div>
